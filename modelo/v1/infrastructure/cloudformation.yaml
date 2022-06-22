@@ -23,7 +23,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the Fargate containers
-      VpcId: !Ref 'VPC'
+      VpcId: 'vpc-0ad0036c43c074175'
 
   # This is a role which is used by the ECS tasks themselves.
   ECSTaskExecutionRole:
