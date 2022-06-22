@@ -20,16 +20,16 @@ Resources:
         Version: 2012-10-17
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
-Outputs:
-  Cluster:
-    Description: The name of the ECS cluster
-    Value: !Ref 'Cluster'
-  ClusterArn:
-    Description: The ARN of the ECS cluster
-    Value: !GetAtt 'Cluster.Arn'
-  ServiceTaskDefExecutionRoleArn:
-    Description: The ARN of the ECS role
-    Value: !GetAtt 'ServiceTaskDefExecutionRole.Arn'
-  CloudMapNamespaceId:
-    Description: CloudMap namespace Id
-    Value: !GetAtt 'CloudMapNamespace.Id'
+# Outputs:
+  # Cluster:
+    # Description: The name of the ECS cluster
+    # Value: !Ref 'Cluster'
+  # ClusterArn:
+    # Description: The ARN of the ECS cluster
+    # Value: !GetAtt 'Cluster.Arn'
+  # ServiceTaskDefExecutionRoleArn:
+    # Description: The ARN of the ECS role
+    # Value: !GetAtt 'ServiceTaskDefExecutionRole.Arn'
+  # CloudMapNamespaceId:
+    # Description: CloudMap namespace Id
+    # Value: !GetAtt 'CloudMapNamespace.Id'
