@@ -1,17 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: AWS Fargate cluster running containers in a public subnet. Only supports
              public facing load balancer, and public service discovery namespaces.
-Mappings:
-  # The VPC and subnet configuration is passed in via the environment spec.
-  SubnetConfig:
-    VPC:
-      CIDR: '{{ environment.inputs.vpc_cidr}}'
-    PublicOne:
-      CIDR: '{{ environment.inputs.subnet_one_cidr}}'
-    PublicTwo:
-      CIDR: '{{ environment.inputs.subnet_two_cidr}}'
-Resources:
 
+Resources:
   # ECS Resources
   ECSCluster:
     Type: AWS::ECS::Cluster
