@@ -3,27 +3,9 @@ Description: A stack for deploying containerized applications in AWS Fargate.
              This stack runs containers in a public or private VPC subnet. 
 
 Mappings:
-  # The VPC and subnet configuration is passed in via the environment spec.
-  SubnetConfig:
-    VPC:
-      CIDR: 172.31.0.0/16
-      # CIDR: '{{ environment.inputs.vpc_cidr}}'
-    Public1:
-      CIDR: 172.31.80.0/20
-      # CIDR: '{{ environment.inputs.public_subnet_one_cidr}}'
-    Public2:
-      CIDR: 172.31.0.0/20
-      # CIDR: '{{ environment.inputs.public_subnet_two_cidr}}'
-    Private1:
-      CIDR: 172.31.64.0/20
-      # CIDR: '{{ environment.inputs.private_subnet_one_cidr}}'
-    Private2:
-      CIDR: 172.31.48.0/20
-      # CIDR: '{{ environment.inputs.private_subnet_two_cidr}}'   
-
+  # Nada para usar aqui
+  
 Resources:
-  VPC:
-    Type: 'AWS::EC2::VPC'
   Cluster:
     Type: 'AWS::ECS::Cluster'
   ServiceTaskDefExecutionRole:
@@ -38,29 +20,6 @@ Resources:
         Version: 2012-10-17
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
-  pingSNSTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      TopicName: !Sub '${AWS::StackName}-ping'
-      KmsMasterKeyId: 'alias/aws/sns'
-  pingSNSTopicPolicy:
-    Type: AWS::SNS::TopicPolicy
-    DependsOn: pingSNSTopic
-    Properties:
-      Topics:
-        - !Ref pingSNSTopic
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              AWS: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:root'
-            Action:
-              - sns:Subscribe
-            Resource: !Ref pingSNSTopic
-            Condition:
-              StringEquals:
-                "sns:Protocol": "sqs"
 Outputs:
   Cluster:
     Description: The name of the ECS cluster
@@ -71,15 +30,6 @@ Outputs:
   ServiceTaskDefExecutionRoleArn:
     Description: The ARN of the ECS role
     Value: !GetAtt 'ServiceTaskDefExecutionRole.Arn'
-  SNSTopicArn:
-    Description: The name of the SNS Topic
-    Value: !Ref 'pingSNSTopic'
-  SNSTopicName:
-    Description: TopicName of the SNS Topic
-    Value: !GetAtt pingSNSTopic.TopicName
-  SNSRegion:
-    Description: Region of the SNS Topic
-    Value: !Ref 'AWS::Region'
   CloudMapNamespaceId:
     Description: CloudMap namespace Id
     Value: !GetAtt 'CloudMapNamespace.Id'
