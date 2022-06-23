@@ -7,161 +7,17 @@ Mappings:
   SubnetConfig:
     VPC:
       CIDR: '{{ environment.inputs.vpc_cidr}}'
-    Public1:
-      CIDR: '{{ environment.inputs.public_subnet_one_cidr}}'
-    Public2:
-      CIDR: '{{ environment.inputs.public_subnet_two_cidr}}'
     Private1:
       CIDR: '{{ environment.inputs.private_subnet_one_cidr}}'
     Private2:
       CIDR: '{{ environment.inputs.private_subnet_two_cidr}}'   
-
+  
 Resources:
-  VPC:
-    Type: 'AWS::EC2::VPC'
-    Properties:
-      CidrBlock: !FindInMap ['SubnetConfig', 'VPC', 'CIDR']
-      EnableDnsHostnames: true
-      EnableDnsSupport: true
-      InstanceTenancy: default
-  PublicSubnet1:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      CidrBlock: !FindInMap ['SubnetConfig', 'Public1', 'CIDR']
-      VpcId: !Ref VPC
-      AvailabilityZone:
-        Fn::Select:
-         - 0
-         - Fn::GetAZs: {Ref: 'AWS::Region'}
-      MapPublicIpOnLaunch: true
-  PublicSubnet1RouteTable:
-    Type: 'AWS::EC2::RouteTable'
-    Properties:
-      VpcId: !Ref VPC
-  PublicSubnet1RouteTableAssociation:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref PublicSubnet1RouteTable
-      SubnetId: !Ref PublicSubnet1
-  PublicSubnet1DefaultRoute:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      RouteTableId: !Ref PublicSubnet1RouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
-    DependsOn:
-      - GatewayAttachement
-  PublicSubnet1EIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-  PublicSubnet1NATGateway:
-    Type: 'AWS::EC2::NatGateway'
-    Properties:
-      SubnetId: !Ref PublicSubnet1
-      AllocationId: !GetAtt 
-        - PublicSubnet1EIP
-        - AllocationId
-  PublicSubnet2:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      CidrBlock: !FindInMap ['SubnetConfig', 'Public2', 'CIDR']
-      VpcId: !Ref VPC
-      AvailabilityZone:
-        Fn::Select:
-         - 1
-         - Fn::GetAZs: {Ref: 'AWS::Region'}
-      MapPublicIpOnLaunch: true
-  PublicSubnet2RouteTable:
-    Type: 'AWS::EC2::RouteTable'
-    Properties:
-      VpcId: !Ref VPC
-  PublicSubnet2RouteTableAssociation:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref PublicSubnet2RouteTable
-      SubnetId: !Ref PublicSubnet2
-  PublicSubnet2DefaultRoute:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      RouteTableId: !Ref PublicSubnet2RouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
-    DependsOn:
-      - GatewayAttachement
-  PublicSubnet2EIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-  PublicSubnet2NATGateway:
-    Type: 'AWS::EC2::NatGateway'
-    Properties:
-      SubnetId: !Ref PublicSubnet2
-      AllocationId: !GetAtt 
-        - PublicSubnet2EIP
-        - AllocationId
-  PrivateSubnet1:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      CidrBlock: !FindInMap ['SubnetConfig', 'Private1', 'CIDR']
-      VpcId: !Ref VPC
-      AvailabilityZone:
-        Fn::Select:
-         - 0
-         - Fn::GetAZs: {Ref: 'AWS::Region'}
-      MapPublicIpOnLaunch: false
-  PrivateSubnet1RouteTable:
-    Type: 'AWS::EC2::RouteTable'
-    Properties:
-      VpcId: !Ref VPC
-  PrivateSubnet1RouteTableAssociation:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref PrivateSubnet1RouteTable
-      SubnetId: !Ref PrivateSubnet1
-  PrivateSubnet1DefaultRoute:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      RouteTableId: !Ref PrivateSubnet1RouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref PublicSubnet1NATGateway
-  PrivateSubnet2:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      CidrBlock: !FindInMap ['SubnetConfig', 'Private2', 'CIDR']
-      VpcId: !Ref VPC
-      AvailabilityZone:
-        Fn::Select:
-         - 1
-         - Fn::GetAZs: {Ref: 'AWS::Region'}
-      MapPublicIpOnLaunch: false
-  PrivateSubnet2RouteTable:
-    Type: 'AWS::EC2::RouteTable'
-    Properties:
-      VpcId: !Ref VPC
-  PrivateSubnet2RouteTableAssociation:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref PrivateSubnet2RouteTable
-      SubnetId: !Ref PrivateSubnet2
-  PrivateSubnet2DefaultRoute:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      RouteTableId: !Ref PrivateSubnet2RouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref PublicSubnet2NATGateway
-  InternetGateway:
-    Type: 'AWS::EC2::InternetGateway'
-  GatewayAttachement:
-    Type: 'AWS::EC2::VPCGatewayAttachment'
-    Properties:
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGateway
   CloudMapNamespace:
     Type: 'AWS::ServiceDiscovery::PrivateDnsNamespace'
     Properties:
       Name: '{{environment.name}}.local'
-      Vpc: !Ref VPC
+      Vpc: vpc-0ad0036c43c074175
   Cluster:
     Type: 'AWS::ECS::Cluster'
   ServiceTaskDefExecutionRole:
