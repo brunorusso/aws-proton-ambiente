@@ -74,21 +74,6 @@ Outputs:
   SNSRegion:
     Description: Region of the SNS Topic
     Value: !Ref 'AWS::Region'
-  VPC:
-    Description: The ID of the VPC that this stack is deployed in
-    Value: !Ref 'VPC'
-  PublicSubnet1:
-    Description: Public subnet one
-    Value: !Ref 'PublicSubnet1'
-  PublicSubnet2:
-    Description: Public subnet two
-    Value: !Ref 'PublicSubnet2'
-  PrivateSubnet1:
-    Description: Private subnet one
-    Value: !Ref 'PrivateSubnet1'
-  PrivateSubnet2:
-    Description: Private subnet two
-    Value: !Ref 'PrivateSubnet2'
   CloudMapNamespaceId:
     Description: CloudMap namespace Id
     Value: !GetAtt 'CloudMapNamespace.Id'
