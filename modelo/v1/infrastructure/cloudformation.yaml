@@ -7,29 +7,6 @@ Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
 
-  # A security group for the containers we will run in Fargate.
-  # Rules are added to this security group based on what ingress you
-  # add for the cluster.
-  ContainerSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Access to the Fargate containers
-      VpcId: 'vpc-0ad0036c43c074175'
-
-  # This is a role which is used by the ECS tasks themselves.
-  ECSTaskExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service: [ecs-tasks.amazonaws.com]
-          Action: ['sts:AssumeRole']
-      Path: /
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
-
 # These output values will be available to service templates to use.
 # Outputs:
   # ClusterName:
