@@ -2,11 +2,12 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: A stack for deploying containerized applications in AWS Fargate.
              This stack runs containers in a public or private VPC subnet. 
 
-Type: AWS::ECS::Cluster
-Properties: 
-  CapacityProviders:
-    - FARGATE
-  ClusterName: ECS-CLUSTER
+Resource:
+  Type: AWS::ECS::Cluster 
+     Properties: 
+        CapacityProviders:
+           - FARGATE
+     ClusterName: ECS-CLUSTER
   
 # Mappings:
   # The VPC and subnet configuration is passed in via the environment spec.
