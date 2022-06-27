@@ -2,12 +2,13 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: AWS Fargate cluster running containers in a public subnet. Only supports
              public facing load balancer, and public service discovery namespaces.
 
-Resource:
-  Type: AWS::ECS::Cluster 
-     Properties: 
-        CapacityProviders:
-           - FARGATE
-     ClusterName: ECS-CLUSTER
+Resources:  
+  Cluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties: 
+       CapacityProviders:
+          - FARGATE
+       ClusterName: ECS-CLUSTER
   
 
 # These output values will be available to service templates to use.
